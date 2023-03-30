@@ -44,6 +44,7 @@ void CrossingRiver::solve()
 
         for (int i = 1; i < largo; ++i)
         {
+            cout << i << endl;
             if (canMove(s, i))
             {
                 cout << "Puedo mover " << i << endl;
@@ -61,69 +62,7 @@ void CrossingRiver::solve()
             }
         }
 
-        // if (canMove(s, 1))
-        // {
-        //     cout << "Puedo mover L de:" << endl;
-        //     s->print(largo);
-        //     State *s1 = move(s, 1);
-        //     cout << "quedando:" << endl;
-        //     s1->print(largo);
-        //     if (!closed->search(s1) && !open->search(s1))
-        //         open->push(s1);
-        //     else
-        //     {
-        //         cout << "No se agrega L" << endl;
-        //         delete s1;
-        //     }
-        // }
-
-        // if (canMove(s, 2))
-        // {
-        //     cout << "Puedo mover C" << endl;
-        //     s->print(largo);
-        //     State *s1 = move(s, 2);
-        //     cout << "quedando:" << endl;
-        //     s1->print(largo);
-        //     if (!closed->search(s1) && !open->search(s1))
-        //         open->push(s1);
-        //     else
-        //     {
-        //         cout << "No se agrega C" << endl;
-        //         delete s1;
-        //     }
-        // }
-
-        // if (canMove(s, 3))
-        // {
-        //     cout << "Puedo mover R" << endl;
-        //     s->print(largo);
-        //     State *s1 = move(s, 3);
-        //     cout << "quedando:" << endl;
-        //     s1->print(largo);
-        //     if (!closed->search(s1) && !open->search(s1))
-        //         open->push(s1);
-        //     else
-        //     {
-        //         cout << "No se agrega R" << endl;
-        //         delete s1;
-        //     }
-        // }
-
-        if (canMove(s, 0))
-        {
-            cout << "Puedo mover G" << endl;
-            s->print(largo);
-            State *s1 = move(s, 0);
-            cout << "quedando:" << endl;
-            s1->print(largo);
-            if (!closed->search(s1) && !open->search(s1))
-                open->push(s1);
-            else
-            {
-                cout << "No se agrega G" << endl;
-                delete s1;
-            }
-        }
+        cout << 0 << endl;
         if (canMove(s, 0))
         {
             cout << "Puedo mover G" << endl;
@@ -191,27 +130,18 @@ State *CrossingRiver::move(State *s, int item)
 
 bool CrossingRiver::canMove(State *s, int item)
 {
-    if (checkMatrix(s->left, item, this->restriccionIzquierda, this->cantidadIzquierda) ||
-        checkMatrix(s->right, item, this->restriccionDerecha, this->cantidadDerecha))
-    {
-        return true;
-    }
-    return false;
+    return (checkMatrix(s->left, item, this->restriccionIzquierda, this->cantidadIzquierda) ||
+        checkMatrix(s->right, item, this->restriccionDerecha, this->cantidadDerecha));
 }
 
 bool CrossingRiver::checkMatrix(int arr[], int item, int *matrix[], int cantidad)
 {
     int largo = this->farmers + this->items;
     int *temp = new int[largo];
-    int cont;
 
     if (arr[0] == 0 || arr[item] == 0) // caso onde el granjero no esta o no esta el item
     {
         return false;
-    }
-    if (arr[item] == 1 && item == 0) // caso de mover el granjero solo
-    {
-        return true;
     }
 
     for (int i = 0; i < largo; ++i) // se copia el arreglo
@@ -229,26 +159,23 @@ bool CrossingRiver::checkMatrix(int arr[], int item, int *matrix[], int cantidad
 
     for (int i = 0; i < cantidad; ++i) // se revisa la matriz
     {
-        if (matrix[i][item] == temp[item])
+        if (arraysEqual(matrix[i], temp, largo))
         {
-            cont = 0;
-            for (int j = 0; j < largo; ++j)
-            {
-                if (matrix[i][j] != temp[j])
-                {
-                    j = largo;
-                }
-                else if (matrix[i][j] == 1 && temp[j] == 1) // TODO: HACER QUE ESTA WEA FUNCIONE CTM AAAAH
-                {
-                    cont += 1;
-                }
-                if (cont >= 2)
-                {
-                    return false;
-                }
-            }
+            return false;
         }
     }
 
+    return true;
+}
+
+bool CrossingRiver::arraysEqual(int a[], int b[], int size)
+{
+    for (int i = 0; i < size; i++)
+    {
+        if (a[i] != b[i])
+        {
+            return false;
+        }
+    }
     return true;
 }

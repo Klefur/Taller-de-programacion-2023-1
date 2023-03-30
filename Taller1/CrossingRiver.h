@@ -25,8 +25,9 @@ public:
         int cantidadDerecha,
         int *restriccionDerecha[]);
     ~CrossingRiver();
-    void solve();                                                      // resuelve el problema
-    State *move(State *s, int item);                                   // Generalizacion de move
-    bool canMove(State *s, int item);                                  // Generalizacion de canMove
+    void solve();                                                       // resuelve el problema
+    State *move(State *s, int item);                                    // Generalizacion de move
+    bool canMove(State *s, int item);                                   // Generalizacion de canMove
     bool checkMatrix(int arr[], int item, int *matrix[], int cantidad); // verifica si hay algun problema en restricciones                                       // verifica si se puede mover el repollo
+    bool arraysEqual(int a[], int b[], int size);                       // compara los arrays
 };
