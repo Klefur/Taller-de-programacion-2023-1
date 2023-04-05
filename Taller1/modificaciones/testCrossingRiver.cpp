@@ -5,7 +5,7 @@ using namespace std;
 
 int main()
 {
-    CrossingRiver *lcr = new CrossingRiver("test.txt");
+    CrossingRiver *lcr = new CrossingRiver("test2.txt");
 
     lcr->solve();
     delete lcr;

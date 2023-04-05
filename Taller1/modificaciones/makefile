@@ -1,5 +1,7 @@
 testCrossingRiver: Load.o State.o Stack.o Operacion.o CrossingRiver.o testCrossingRiver.cpp
 	g++ -o testCrossingRiver Load.o State.o Stack.o Operacion.o CrossingRiver.o testCrossingRiver.cpp
+main: Load.o State.o Stack.o Operacion.o CrossingRiver.o main.cpp
+	g++ -o main Load.o State.o Stack.o Operacion.o CrossingRiver.o main.cpp
 testLoad: Load.o testLoad.cpp
 	g++ -o testLoad Load.o testLoad.cpp
 testState: State.o testState.cpp

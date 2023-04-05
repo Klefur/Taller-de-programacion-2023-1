@@ -1,10 +1,5 @@
 #include <iostream>
 
-#define FARMER 0
-#define WOLF 1
-#define GOAT 2
-#define CABBAGE 3
-
 class State
 {
 public:

@@ -36,13 +36,11 @@ State::~State()
 
 void State::print(int largo)
 {
-    cout << "Izquierda: ";
     for (int i = 0; i < largo; i++)
     {
         cout << this->left[i] << " ";
     }
-    cout << endl;
-    cout << "Derecha: ";
+    cout << " | ";
     for (int i = 0; i < largo; i++)
     {
         cout << this->right[i] << " ";

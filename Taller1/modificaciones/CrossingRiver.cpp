@@ -3,7 +3,7 @@
 
 CrossingRiver::CrossingRiver(const char *name)
 {
-    Load *fileReader = new Load("test.txt");
+    Load *fileReader = new Load(name);
 
     int *info = fileReader->readInfo();
 
@@ -53,7 +53,6 @@ void CrossingRiver::solve()
     int largo = this->farmers + this->items;
     State *inicial = new State(largo); // new llama al constructor y entrega un puntero
     generarCombinaciones(inicial->left, 0, largo, 0);
-    cout << "EMPIEZA EL ALGORITMO" << endl;
     open->push(inicial);
     while (!open->isEmpty())
     {
@@ -69,16 +68,16 @@ void CrossingRiver::solve()
         {
             if (canMove(s, ops[i]))
             {
-                cout << "Puedo mover " << i << endl;
-                s->print(largo);
+                // cout << "Puedo aplicar op: " << i << endl;
+                // s->print(largo);
                 State *s1 = move(s, ops[i]);
-                cout << "quedando:" << endl;
-                s1->print(largo);
+                // cout << "quedando:" << endl;
+                // s1->print(largo);
                 if (!closed->search(s1) && !open->search(s1))
                     open->push(s1);
                 else
                 {
-                    cout << "No se agrega " << i << endl;
+                    // cout << "No se aplica op: " << i << endl;
                     delete s1;
                 }
             }
@@ -115,19 +114,43 @@ bool CrossingRiver::canMove(State *s, Operacion *op)
     // TODO GENERA MOVIMIENTOS DE S, COMPARA CON OP
     // TODO COMPARA LOS 0 DE CONDUCTORES Y DE ITEMS VE QUE SE MUEVE LA MISMA CANTIDAD DE ESPACIO DEL BOTE
     // TODO AGREGAR DISCRIMINACION DONDE SE MUEVE AL MENOS 1 CONDUCTOR, EL BOTE ESTA DEL LADO CORRECTO
-    int count = 0;
+    int countMove = 0;
+    int countFarmMove = 0;
 
-    for (int i = 0; i < this->farmers; ++i)
+    for (int i = 0; i < this->cantidadIzquierda; ++i)
     {
-        if (s->left[i] == op->op[i])
+        if (this->restriccionIzquierda[i] == op->coste)
         {
-            count++;
+            return false;
         }
     }
 
-    cout << count << endl;
+    for (int i = 0; i < this->cantidadDerecha; ++i)
+    {
+        if (this->restriccionDerecha[i] == op->coste)
+        {
+            return false;
+        }
+    }
 
-    if (count > this->boatSize)
+    for (int i = 0; i < this->farmers; ++i)
+    {
+        if (s->left[i] != op->op[i])
+        {
+            countMove++;
+            countFarmMove++;
+        }
+    }
+
+    for (int i = this->farmers; i < this->items + this->farmers; ++i)
+    {
+        if (s->left[i] != op->op[i])
+        {
+            countMove++;
+        }
+    }
+
+    if (countMove > this->boatSize || countFarmMove == 0)
     {
         return false;
     } // Se verifica que se muevan la misma cantidad que el espacio del bote
