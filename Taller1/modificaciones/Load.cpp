@@ -27,7 +27,7 @@ int *Load::readInfo()
     return info;
 }
 
-int Load::readRes()
+int Load::readRestriccion()
 {
     getline(*this->file, this->line);
     int resCount = atoi(this->line.c_str()); // c_str convierte el string a un arreglo de caracteres

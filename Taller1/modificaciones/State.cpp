@@ -11,10 +11,11 @@ State::State(int largo)
         this->left[i] = 1;  // todos a la izquierda
         this->right[i] = 0; // nada a la derecha
     }
+    this->coste = (1 << largo) - 1;
     previous = nullptr;
 }
 
-State::State(int left[], int right[], State *previous, int largo)
+State::State(int left[], int right[], State *previous, int largo, int coste)
 {
     this->left = new int[largo];
     this->right = new int[largo];
@@ -25,6 +26,7 @@ State::State(int left[], int right[], State *previous, int largo)
         this->right[i] = right[i];
     }
     this->previous = previous;
+    this->coste = coste;
 }
 
 State::~State()

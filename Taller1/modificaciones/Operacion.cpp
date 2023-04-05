@@ -1,8 +1,13 @@
 #include "Operacion.h"
+#include <iostream>
 
-Operacion::Operacion(int *arr, int largo)
+using namespace std;
+
+Operacion::Operacion(int *arr, int largo, int peso, int coste)
 {
     this->op = new int[largo];
+    this->peso = peso;
+    this->coste = coste;
 
     for (int i = 0; i < largo; ++i)
     {

@@ -10,28 +10,29 @@ CrossingRiver::CrossingRiver(const char *name)
     this->farmers = info[0];
     this->items = info[1];
     this->boatSize = info[2];
+    this->boatLeft = true;
+    this->largoOps = 0;
 
     int N = info[0] + info[1];
 
-    this->cantidadIzquierda = fileReader->readRes();
+    this->ops = new Operacion *[1 << N];
 
+    this->cantidadIzquierda = fileReader->readRestriccion();
     int **matrizIzquierda = fileReader->loadMatrix(this->cantidadIzquierda, N);
-    this->restriccionIzquierda = new int[this->cantidadIzquierda];
 
+    this->restriccionIzquierda = new int[this->cantidadIzquierda];
     for (int i = 0; i < this->cantidadIzquierda; ++i)
     {
         this->restriccionIzquierda[i] = this->binaryToDecimal(matrizIzquierda[i], N);
     }
 
-    this->cantidadDerecha = fileReader->readRes();
-
+    this->cantidadDerecha = fileReader->readRestriccion();
     int **matrizDerecha = fileReader->loadMatrix(this->cantidadDerecha, N);
-    this->restriccionDerecha = new int[this->cantidadDerecha];
 
+    this->restriccionDerecha = new int[this->cantidadDerecha];
     for (int i = 0; i < this->cantidadDerecha; ++i)
     {
         this->restriccionDerecha[i] = this->binaryToDecimal(matrizDerecha[i], N);
-        cout << this->restriccionDerecha[i] << endl;
     }
 
     // cerrar el archivo
@@ -51,6 +52,8 @@ void CrossingRiver::solve()
 {
     int largo = this->farmers + this->items;
     State *inicial = new State(largo); // new llama al constructor y entrega un puntero
+    generarCombinaciones(inicial->left, 0, largo, 0);
+    cout << "EMPIEZA EL ALGORITMO" << endl;
     open->push(inicial);
     while (!open->isEmpty())
     {
@@ -62,15 +65,13 @@ void CrossingRiver::solve()
             return;
         }
         closed->push(s);
-
-        for (int i = 1; i < largo; ++i)
+        for (int i = 0; i < 1 << largo; ++i)
         {
-            cout << i << endl;
-            if (canMove(s, i))
+            if (canMove(s, ops[i]))
             {
                 cout << "Puedo mover " << i << endl;
                 s->print(largo);
-                State *s1 = move(s, i);
+                State *s1 = move(s, ops[i]);
                 cout << "quedando:" << endl;
                 s1->print(largo);
                 if (!closed->search(s1) && !open->search(s1))
@@ -83,28 +84,11 @@ void CrossingRiver::solve()
             }
         }
 
-        cout << 0 << endl;
-        if (canMove(s, 0))
-        {
-            cout << "Puedo mover G" << endl;
-            s->print(largo);
-            State *s1 = move(s, 0);
-            cout << "quedando:" << endl;
-            s1->print(largo);
-            if (!closed->search(s1) && !open->search(s1))
-                open->push(s1);
-            else
-            {
-                cout << "No se agrega G" << endl;
-                delete s1;
-            }
-        }
-
     } // while
     cout << "No hay solucion" << endl;
 }
 
-State *CrossingRiver::move(State *s, int item)
+State *CrossingRiver::move(State *s, Operacion *op)
 {
     int largo = this->farmers + this->items;
     int left[largo];
@@ -112,47 +96,63 @@ State *CrossingRiver::move(State *s, int item)
     // copiar los arreglos
     for (int i = 0; i < largo; i++)
     {
-        left[i] = s->left[i];
-        right[i] = s->right[i];
-    }
-
-    if (item != 0)
-    {
-        if (left[item] == 1)
+        left[i] = op->op[i];
+        if (op->op[i] == 1)
         {
-            left[item] = 0;
-            right[item] = 1;
-            left[0] = 0;
-            right[0] = 1;
+            right[i] = 0;
         }
         else
         {
-            left[item] = 1;
-            right[item] = 0;
-            left[0] = 1;
-            right[0] = 0;
+            right[i] = 1;
         }
-        return new State(left, right, s, largo);
     }
 
-    if (left[0] == 1)
-    {
-        left[0] = 0;
-        right[0] = 1;
-    }
-    else
-    {
-        left[0] = 1;
-        right[0] = 0;
-    }
-
-    return new State(left, right, s, largo);
+    return new State(left, right, s, largo, op->coste);
 }
 
-bool CrossingRiver::canMove(State *s, int item)
+bool CrossingRiver::canMove(State *s, Operacion *op)
 {
-    // return (checkMatrix(s->left, item, this->restriccionIzquierda, this->cantidadIzquierda) ||
-    //        checkMatrix(s->right, item, this->restriccionDerecha, this->cantidadDerecha));
+    // TODO GENERA MOVIMIENTOS DE S, COMPARA CON OP
+    // TODO COMPARA LOS 0 DE CONDUCTORES Y DE ITEMS VE QUE SE MUEVE LA MISMA CANTIDAD DE ESPACIO DEL BOTE
+    // TODO AGREGAR DISCRIMINACION DONDE SE MUEVE AL MENOS 1 CONDUCTOR, EL BOTE ESTA DEL LADO CORRECTO
+    int count = 0;
+
+    for (int i = 0; i < this->farmers; ++i)
+    {
+        if (s->left[i] == op->op[i])
+        {
+            count++;
+        }
+    }
+
+    cout << count << endl;
+
+    if (count > this->boatSize)
+    {
+        return false;
+    } // Se verifica que se muevan la misma cantidad que el espacio del bote
+
+    return true;
+}
+
+void CrossingRiver::generarCombinaciones(int v[], int i, int n, int coste)
+{
+    if (i == n)
+    { // caso base: si hemos llegado al final del arreglo
+        int peso = binaryToDecimal(v, i);
+
+        ops[this->largoOps] = new Operacion(v, n, coste, peso);
+        ++this->largoOps;
+
+        return;
+    }
+
+    v[i] = 0; // generamos la combinación con un 0 en la posición i
+    generarCombinaciones(v, i + 1, n, coste);
+
+    v[i] = 1; // generamos la combinación con un 1 en la posición i
+    ++coste;
+    generarCombinaciones(v, i + 1, n, coste);
 }
 
 int CrossingRiver::binaryToDecimal(int binaryArray[], int arraySize)

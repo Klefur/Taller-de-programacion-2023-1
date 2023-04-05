@@ -15,5 +15,5 @@ public:
     ~Load();
     int *readInfo();
     int **loadMatrix(int resCount, int N);
-    int readRes();
+    int readRestriccion();
 };
