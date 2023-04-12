@@ -1,5 +1,6 @@
 #include <iostream>
 #include "Stack.h"
+#include "Operacion.h"
 
 using namespace std;
 
@@ -7,27 +8,25 @@ using namespace std;
 class CrossingRiver
 {
 public:
-    int cantidadDerecha;
-    int **restriccionDerecha;
     int cantidadIzquierda;
-    int **restriccionIzquierda;
+    int cantidadDerecha;
+    int *restriccionIzquierda;
+    int *restriccionDerecha;
+
     int farmers;
     int items;
     int boatSize;
+    int largoOps;
+
+    Operacion **ops;
     Stack *open;
     Stack *closed;
-    CrossingRiver(
-        int farmers,
-        int items,
-        int boatSize,
-        int cantidadIzquierda,
-        int *restriccionIzquierda[],
-        int cantidadDerecha,
-        int *restriccionDerecha[]);
+
+    CrossingRiver(const char *name);
     ~CrossingRiver();
-    void solve();                                                       // resuelve el problema
-    State *move(State *s, int item);                                    // Generalizacion de move
-    bool canMove(State *s, int item);                                   // Generalizacion de canMove
-    bool checkMatrix(int arr[], int item, int *matrix[], int cantidad); // verifica si hay algun problema en restricciones                                       // verifica si se puede mover el repollo
-    bool arraysEqual(int a[], int b[], int size);                       // compara los arrays
+    void solve();                          // resuelve el problema
+    State *move(State *s, Operacion *op);  // Generalizacion de move
+    bool canMove(State *s, Operacion *op); // Generalizacion de canMove
+    void generarCombinaciones(int v[], int i, int n);
+    int binaryToDecimal(int binaryArray[], int arraySize);
 };

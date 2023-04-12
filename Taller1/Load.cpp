@@ -7,11 +7,11 @@ Load::Load(const char *nombre)
     this->file = new ifstream(nombre); // abrir el archivo
     if (this->file->is_open())
     { // verificar que el archivo se abrio correctamente
-        cout << "archivo abierto" << std::endl;
+        // cout << "archivo abierto" << std::endl;
     }
     else
     {
-        cout << "archivo no encontrado" << std::endl;
+        // cout << "archivo no encontrado" << std::endl;
         exit(1);
     }
 }
@@ -27,7 +27,7 @@ int *Load::readInfo()
     return info;
 }
 
-int Load::readRes()
+int Load::readRestriccion()
 {
     getline(*this->file, this->line);
     int resCount = atoi(this->line.c_str()); // c_str convierte el string a un arreglo de caracteres

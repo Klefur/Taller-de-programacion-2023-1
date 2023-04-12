@@ -1,21 +1,27 @@
 #include "State.h"
 
+using namespace std;
+
 State::State(int largo)
 {
     this->left = new int[largo];
     this->right = new int[largo];
+    this->boatIsLeft = true;
+
     for (int i = 0; i < largo; i++)
     {
         this->left[i] = 1;  // todos a la izquierda
         this->right[i] = 0; // nada a la derecha
     }
+    this->coste = (1 << largo) - 1;
     previous = nullptr;
 }
 
-State::State(int left[], int right[], State *previous, int largo)
+State::State(int left[], int right[], State *previous, int largo, int coste, bool boatIsLeft)
 {
     this->left = new int[largo];
     this->right = new int[largo];
+    this->boatIsLeft = boatIsLeft;
 
     for (int i = 0; i < largo; i++)
     {
@@ -23,6 +29,7 @@ State::State(int left[], int right[], State *previous, int largo)
         this->right[i] = right[i];
     }
     this->previous = previous;
+    this->coste = coste;
 }
 
 State::~State()
@@ -32,17 +39,16 @@ State::~State()
 
 void State::print(int largo)
 {
-    cout << "Izquierda: ";
     for (int i = 0; i < largo; i++)
     {
         cout << this->left[i] << " ";
     }
-    cout << endl;
-    cout << "Derecha: ";
+    cout << " | ";
     for (int i = 0; i < largo; i++)
     {
         cout << this->right[i] << " ";
     }
+
     cout << endl;
 }
 

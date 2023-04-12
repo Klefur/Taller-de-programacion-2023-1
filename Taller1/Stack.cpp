@@ -55,15 +55,12 @@ bool Stack::search(State *s)
     for (int i = 0; i <= top; i++)
     {
         equal = true;
-        for (int j = 0; j < 4; j++)
+
+        if (stack[i]->coste != s->coste || stack[i]->boatIsLeft != s->boatIsLeft)
         {
-            if (stack[i]->left[j] != s->left[j] || stack[i]->right[j] != s->right[j])
-            {
-                // cout << "i: " << i << " j: " << j << endl;
-                equal = false;
-                break;
-            }
+            equal = false;
         }
+
         if (equal)
         {
             return true;

@@ -33,27 +33,21 @@ bool isValid(int *arr)
     return true;
 }
 
-void generarCombinaciones(int v[], int i, int n, int peso)
+void generarCombinaciones(int v[], int i, int n)
 {
     if (i == n)
     { // caso base: si hemos llegado al final del arreglo
-        int coste = binaryToDecimal(v, i);
-        // cout << " coste: " << coste << endl;
+        int peso = binaryToDecimal(v, i);
 
-        // if (isValid(v))
-        // {
-        ops[cont] = new Operacion(v, n, peso, coste);
-        ++cont;
-        // }
+        ops[cont] = new Operacion(v, n, peso);
         return;
     }
 
     v[i] = 0; // generamos la combinación con un 0 en la posición i
-    generarCombinaciones(v, i + 1, n, peso);
+    generarCombinaciones(v, i + 1, n);
 
     v[i] = 1; // generamos la combinación con un 1 en la posición i
-    ++peso;
-    generarCombinaciones(v, i + 1, n, peso);
+    generarCombinaciones(v, i + 1, n);
 }
 
 int main(int argc, char const *argv[])
@@ -62,7 +56,7 @@ int main(int argc, char const *argv[])
 
     ops = new Operacion *[(1 << 4)];
 
-    generarCombinaciones(a, 0, 4, 0);
+    generarCombinaciones(a, 0, 4);
 
     cout << cont << " "
          << "Lectura de ops: " << endl;
@@ -73,7 +67,7 @@ int main(int argc, char const *argv[])
         {
             cout << ops[i]->op[j] << " ";
         }
-        cout << "coste: " << ops[i]->coste << endl;
+        cout << "peso: " << ops[i]->peso << endl;
     }
     return 0;
 }

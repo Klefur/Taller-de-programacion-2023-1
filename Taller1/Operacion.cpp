@@ -3,11 +3,10 @@
 
 using namespace std;
 
-Operacion::Operacion(int *arr, int largo, int peso, int coste)
+Operacion::Operacion(int *arr, int largo, int peso)
 {
     this->op = new int[largo];
     this->peso = peso;
-    this->coste = coste;
 
     for (int i = 0; i < largo; ++i)
     {

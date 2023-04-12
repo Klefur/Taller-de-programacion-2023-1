@@ -10,10 +10,10 @@ int main()
 
     int N = info[0] + info[1];
 
-    int resIzq = fileReader->readRes();
+    int resIzq = fileReader->readRestriccion();
     int **restriccionesIzq = fileReader->loadMatrix(resIzq, N);
 
-    int resDer = fileReader->readRes();
+    int resDer = fileReader->readRestriccion();
     int **restriccionesDer = fileReader->loadMatrix(resDer, N);
 
     // cerrar el archivo
