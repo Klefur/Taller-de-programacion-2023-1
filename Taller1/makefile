@@ -4,6 +4,8 @@ testCrossingRiver: Load.o State.o Stack.o Operacion.o CrossingRiver.o testCrossi
 	g++ -o testCrossingRiver Load.o State.o Stack.o Operacion.o CrossingRiver.o testCrossingRiver.cpp
 testLoad: Load.o testLoad.cpp
 	g++ -o testLoad Load.o testLoad.cpp
+testOperacion: Operacion.o testOperacion.cpp
+	g++ -o testOperacion Operacion.o testOperacion.cpp
 testState: State.o testState.cpp
 	g++ -o testState State.o testState.cpp
 testStack: State.o Stack.o testStack.cpp
@@ -19,4 +21,5 @@ Stack.o: Stack.h Stack.cpp
 Load.o: Load.h Load.cpp
 	g++ -c Load.cpp
 clean:
-	rm -f *.o testState testLoad 
+	rm -f *.o testState testLoad
+	

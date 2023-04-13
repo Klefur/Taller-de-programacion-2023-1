@@ -30,7 +30,7 @@ int main()
         r->solve();
         t_fin = clock();
         secs = secs + (double)(t_fin - t_ini) / CLOCKS_PER_SEC;
-        // delete r;
+        delete r;
     }
     cout << endl
          << "Tiempo promedio: " << secs / numVeces << " segundos" << endl;
