@@ -36,6 +36,11 @@ CrossingRiver::CrossingRiver(const char *name)
 
     // cerrar el archivo
     fileReader->~Load();
+    
+    int largo = this->farmers + this->items;
+    State *inicial = new State(largo);
+    generarCombinaciones(inicial->left, 0, largo);
+    delete inicial;
 
     this->open = new Stack(1 << N);
     this->closed = new Stack(1 << N);
@@ -51,7 +56,6 @@ void CrossingRiver::solve()
 {
     int largo = this->farmers + this->items;
     State *inicial = new State(largo); // new llama al constructor y entrega un puntero
-    generarCombinaciones(inicial->left, 0, largo);
     open->push(inicial);
     while (!open->isEmpty())
     {
@@ -110,7 +114,6 @@ State *CrossingRiver::move(State *s, Operacion *op)
 
 bool CrossingRiver::canMove(State *s, Operacion *op)
 {
-    // TODO: Condicionar el movimiento en si el bote esta del lado correcto
     int countMove = 0;
     int countFarmMove = 0;
     int moveToRight = 0;

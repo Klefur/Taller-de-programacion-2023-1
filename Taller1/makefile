@@ -21,5 +21,5 @@ Stack.o: Stack.h Stack.cpp
 Load.o: Load.h Load.cpp
 	g++ -c Load.cpp
 clean:
-	rm -f *.o testState testLoad
+	rm -f *.o main testCrossingRiver testLoad testOperacion testState testStack
 	
