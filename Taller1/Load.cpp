@@ -2,6 +2,9 @@
 
 using namespace std;
 
+// Entrada: El nombre del archivo a abrir
+// Salida: -
+// Funcionamiento: Abre el archivo y verifica que se haya abierto correctamente
 Load::Load(const char *nombre)
 {
     this->file = new ifstream(nombre); // abrir el archivo
@@ -16,8 +19,14 @@ Load::Load(const char *nombre)
     }
 }
 
+// Entrada: -
+// Salida: -
+// Funcionamiento: Cierra el archivo
 Load::~Load() { this->file->close(); }
 
+// Entrada: -
+// Salida: Un arreglo con los datos del conductores, items y tamaño del bote
+// Funcionamiento: Lee la primera linea del archivo y extrae los datos
 int *Load::readInfo()
 {
     int *info = new int[3];
@@ -27,6 +36,9 @@ int *Load::readInfo()
     return info;
 }
 
+// Entrada: -
+// Salida: La cantidad de restricciones
+// Funcionamiento: Lee la cantidad de restricciones
 int Load::readRestriccion()
 {
     getline(*this->file, this->line);
@@ -34,6 +46,9 @@ int Load::readRestriccion()
     return resCount;
 }
 
+// Entrada: La cantidad de restricciones y la cantidad total de conductores e items
+// Salida: Una matriz con las restricciones
+// Funcionamiento: Lee las restricciones y las guarda en una matriz
 int **Load::loadMatrix(int resCount, int N)
 {
 

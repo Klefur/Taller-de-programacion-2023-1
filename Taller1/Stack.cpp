@@ -1,5 +1,8 @@
 #include "Stack.h"
 
+// Entrada: El tamaño del stack
+// Salida: -
+// Funcionamiento: Constructor de la clase
 Stack::Stack(int size)
 {
     this->size = size;
@@ -7,11 +10,17 @@ Stack::Stack(int size)
     stack = new State *[size]; // crea arreglo de tamaño size
 }
 
+// Entrada: -
+// Salida: -
+// Funcionamiento: Destructor de la clase
 Stack::~Stack()
 {
     delete[] stack;
 }
 
+// Entrada: Un estado
+// Salida: -
+// Funcionamiento: Agrega un estado al stack
 void Stack::push(State *s)
 {
     if (top < size - 1)
@@ -34,6 +43,9 @@ void Stack::push(State *s)
     }
 }
 
+// Entrada: -
+// Salida: Un estado
+// Funcionamiento: Saca un estado del stack y lo retorna
 State *Stack::pop()
 {
     if (top >= 0)
@@ -49,6 +61,9 @@ State *Stack::pop()
     }
 }
 
+// Entrada: Un estado
+// Salida: Un booleano
+// Funcionamiento: Busca un estado en el stack y retorna true si lo encuentra, false sino
 bool Stack::search(State *s)
 {
     bool equal = false;
@@ -69,11 +84,17 @@ bool Stack::search(State *s)
     return false;
 }
 
+// Entrada: -
+// Salida: Un booleano
+// Funcionamiento: Retorna true si el stack esta vacio, false sino
 bool Stack::isEmpty()
 {
     return top == -1;
 }
 
+// Entrada: Un entero
+// Salida: -
+// Funcionamiento: Imprime el stack
 void Stack::print(int largo)
 {
     for (int i = 0; i <= top; i++)

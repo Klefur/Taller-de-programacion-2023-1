@@ -1,6 +1,9 @@
 #include "CrossingRiver.h"
 #include "Load.h"
 
+// Entrada: El nombre del sistema a solucionar
+// Salida: -
+// Funcionamiento: Carga el archivo de entrada y genera las combinaciones de movimientos
 CrossingRiver::CrossingRiver(const char *name)
 {
     Load *fileReader = new Load(name);
@@ -46,12 +49,19 @@ CrossingRiver::CrossingRiver(const char *name)
     this->closed = new Stack(1 << N);
 }
 
+// Entrada: -
+// Salida: -
+// Funcionamiento: Destructor de la clase
 CrossingRiver::~CrossingRiver()
 {
     delete this->open;
     delete this->closed;
 }
 
+// Entrada: -
+// Salida: -
+// Funcionamiento: Itera sobre el arreglo de operaciones hasta encontrar la solucion o
+//                 hasta que no queden estados en open
 void CrossingRiver::solve()
 {
     int largo = this->farmers + this->items;
@@ -62,8 +72,8 @@ void CrossingRiver::solve()
         State *s = open->pop();
         if (s->isFinal(largo))
         {
-            cout << "Solucion encontrada" << endl;
-            s->printPath(largo);
+            // cout << "Solucion encontrada" << endl;
+            // s->printPath(largo);
             return;
         }
         closed->push(s);
@@ -90,6 +100,9 @@ void CrossingRiver::solve()
     cout << "No hay solucion" << endl;
 }
 
+// Entrada: Un puntero a estado s y un puntero a una operacion op
+// Salida: Un puntero a estado
+// Funcionamiento: Aplica la operacion op al estado s y retorna el nuevo estado
 State *CrossingRiver::move(State *s, Operacion *op)
 {
     int largo = this->farmers + this->items;
@@ -112,6 +125,9 @@ State *CrossingRiver::move(State *s, Operacion *op)
     return new State(left, right, s, largo, op->peso, !s->boatIsLeft);
 }
 
+// Entrada: Un puntero a estado s y un puntero a una operacion op
+// Salida: Un booleano
+// Funcionamiento: Revisa si se puede aplicar la operacion op al estado s
 bool CrossingRiver::canMove(State *s, Operacion *op)
 {
     int countMove = 0;
@@ -188,6 +204,10 @@ bool CrossingRiver::canMove(State *s, Operacion *op)
     return false;
 }
 
+// Entrada: Un arreglo de enteros v, un entero i: indice y un entero n: largo
+// Salida: -
+// Funcionamiento: Genera todas las combinaciones posibles de 0 y 1 en un arreglo de largo n
+//                 y las guarda en el arreglo de operaciones
 void CrossingRiver::generarCombinaciones(int v[], int i, int n)
 {
     if (i == n)
@@ -207,6 +227,9 @@ void CrossingRiver::generarCombinaciones(int v[], int i, int n)
     generarCombinaciones(v, i + 1, n);
 }
 
+// Entrada: Un arreglo de enteros binarios y un entero que representa el largo del arreglo
+// Salida: Un entero que representa el valor decimal del arreglo binario
+// Funcionamiento: Convierte un arreglo binario a un entero decimal
 int CrossingRiver::binaryToDecimal(int binaryArray[], int arraySize)
 {
     int decimalValue = 0;
