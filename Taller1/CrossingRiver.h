@@ -22,11 +22,18 @@ public:
     Stack *open;
     Stack *closed;
 
+    // Constructor
     CrossingRiver(const char *name);
+    // Destructor
     ~CrossingRiver();
-    void solve();                          // resuelve el problema
-    State *move(State *s, Operacion *op);  // Generalizacion de move
-    bool canMove(State *s, Operacion *op); // Generalizacion de canMove
+    // resuelve el problema
+    void solve();                          
+    // Generalizacion de move, mueve elementos
+    State *move(State *s, Operacion *op);  
+    // Generalizacion de canMove, verifica si se pueden mover elementos
+    bool canMove(State *s, Operacion *op); 
+    // Genera las operaciones
     void generarCombinaciones(int v[], int i, int n);
+    // Convierte de binario a decimal
     int binaryToDecimal(int binaryArray[], int arraySize);
 };
