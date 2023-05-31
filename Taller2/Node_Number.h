@@ -2,7 +2,7 @@
 
 class Node_Number : public Node {
    public:
-    char operation;
+    int number;
 
     Node_Number(int number);
     ~Node_Number();

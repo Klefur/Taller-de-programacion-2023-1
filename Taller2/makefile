@@ -1,4 +1,4 @@
-main: Node.o Node_Operation.o Node_Variable.o Node_Number.o 
+Main: Node.o Node_Operation.o Node_Variable.o Node_Number.o 
 	g++ -o main Node.o Node_Operation.o Node_Variable.o Node_Number.o loadFile.cpp
 Node.o:
 	g++ -c Node.cpp

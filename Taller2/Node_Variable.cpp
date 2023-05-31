@@ -1,4 +1,7 @@
+#include <iostream>
 #include "Node_Variable.h"
+
+using namespace std;
 
 Node_Variable::Node_Variable(char variable) {
     this->variable = variable;
@@ -6,3 +9,7 @@ Node_Variable::Node_Variable(char variable) {
 }
 
 Node_Variable::~Node_Variable() {}
+
+void Node_Variable::print() {
+    cout << variable;
+}
