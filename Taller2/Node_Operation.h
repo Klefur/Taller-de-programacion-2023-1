@@ -3,6 +3,7 @@
 class Node_Operation : public Node {
    public:
     char operation;
+    Node* parent;
     Node* left;
     Node* right;
 

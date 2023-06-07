@@ -5,6 +5,7 @@ using namespace std;
 
 Node_Number::Node_Number(int number) {
     this->number = number;
+    parent = nullptr;
     type = NUMBER;
 }
 

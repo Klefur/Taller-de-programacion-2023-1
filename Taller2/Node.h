@@ -8,6 +8,8 @@ class Node {
 #define INVALID 3
 
    public:
+    Node* parent;
+
     Node();
     ~Node();
     int type;

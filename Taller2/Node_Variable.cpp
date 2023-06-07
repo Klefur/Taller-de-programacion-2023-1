@@ -5,6 +5,7 @@ using namespace std;
 
 Node_Variable::Node_Variable(char variable) {
     this->variable = variable;
+    parent = nullptr;
     type = VARIABLE;
 }
 
