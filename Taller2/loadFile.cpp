@@ -9,19 +9,21 @@
 using namespace std;
 
 int main() {
-    AST* tree = new AST("expr2.txt");
+    AST* tree = new AST("expr1.txt");
 
     tree->print();
 
     cout << endl;
 
-    // Node* root3 = tree->derivate(tree->root, 'x');
-    // root3->print();
-    // cout << endl;
+    Node* root3 = tree->derivate(tree->root, 'x');
+    root3->print();
+    cout << endl;
 
-    Node* root5 = tree->simplify(tree->root);
+    Node* root4 = tree->simplify(root3);
+    root4->print();
 
-    root5->print();
+    // Node_Operation *root2 = (Node_Operation*)tree->root;
+    // cout << tree->equals(root2->left, root2->right) << endl;
 
     return 0;
 }

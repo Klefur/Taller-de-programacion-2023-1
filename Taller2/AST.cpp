@@ -266,16 +266,25 @@ Node* AST::derivate(Node* node, char variable) {
  * */
 Node* AST::simplify(Node* node) {
     Node* simplified;
+    Node* compared;
+    Node_Operation* op = (Node_Operation*)node;
 
-    if (((Node_Operation*)node)->operation == '+') {
+    if (op->operation == '+') {
         simplified = simplifySum(node);
-    } else if (((Node_Operation*)node)->operation == '*') {
-        simplified = simplifySum(node);
+    } else if (op->operation == '*') {
+        simplified = simplifyMult(node);
     }
-    if (simplified != nullptr) {
-        return simplifyNullable(simplified);
+    if (simplified == nullptr) {
+        simplified = node;
     }
-    return simplifyNullable(node);
+
+    do {
+        compared = simplified;
+        simplified = simplifyNullable(simplified);
+    }
+    while (!equals(simplified, compared));
+
+    return simplified;
 }
 
 /**
@@ -317,8 +326,7 @@ Node* AST::simplifySum(Node* node) {
         for (int i = 0; i < largo; i++) {
             if (variable[i] == variables.top()) {
                 countVariable[i]++;
-                variables.pop();
-                break;
+                added = true;
             } else if (variable[i] == '0') {
                 variable[i] = variables.top();
                 countVariable[i]++;
@@ -397,16 +405,23 @@ Node* AST::simplifyMult(Node* node) {
         numbers.pop();
     }
 
+    bool added = false;
     while (!variables.empty()) {
         for (int i = 0; i < largo; i++) {
             if (variable[i] == variables.top()) {
                 countVariable[i]++;
-            } else {
+                added = true;
+            } else if (variable[i] == '0') {
                 variable[i] = variables.top();
                 countVariable[i]++;
+                added = true;
             }
-            variables.pop();
-            break;
+
+            if (added) {
+                variables.pop();
+                added = false;
+                break;
+            }
         }
     }
 
@@ -529,6 +544,42 @@ Node* AST::simplifyNullable(Node* node) {
 }
 
 /**
+ * @brief Recibe 2 nodos y compara si el arbol que representa
+ * es igual al a comparar
+ * @param node1 Nodo a comparar
+ * @param node2 Nodo a comparar
+ * @return bool True si son iguales False si no
+ * */
+bool AST::equals(Node* node1, Node* node2) {
+    if (node1->type == node2->type) {
+        if (node1->type == OPERATOR) {
+            Node_Operation* op1 = (Node_Operation*)node1;
+            Node_Operation* op2 = (Node_Operation*)node2;
+
+            if (op1->operation == op2->operation) {
+                return (equals(op1->left, op2->left) &&
+                        equals(op1->right, op2->right)) ||
+                       (equals(op1->left, op2->right) &&
+                        equals(op1->right, op2->left));
+            } else {
+                return false;
+            }
+        } else if (node1->type == NUMBER && node2->type == NUMBER) {
+            Node_Number* num1 = (Node_Number*)node1;
+            Node_Number* num2 = (Node_Number*)node2;
+
+            return num1->number == num2->number;
+        } else if (node1->type == VARIABLE && node2->type == VARIABLE) {
+            Node_Variable* var1 = (Node_Variable*)node1;
+            Node_Variable* var2 = (Node_Variable*)node2;
+
+            return var1->variable == var2->variable;
+        }
+    }
+    return false;
+}
+
+/**
  * @brief Imprime el arbol
  * */
 void AST::print() {
@@ -536,13 +587,14 @@ void AST::print() {
 }
 
 /**
- * @brief Recibe un nodo y lee el arbol guandando los numeros y variables en en un stack
- * esto para un arbol de un solo tipo de operacion
+ * @brief Recibe un nodo y lee el arbol guandando los numeros y variables en en
+ * un stack esto para un arbol de un solo tipo de operacion
  * @param node Nodo a leer
  * @param variables Stack de variables
  * @param numbers Stack de numeros
  * @param operation Operacion a buscar
- * @return bool False si el arbol no es del tipo de operacion buscado True si lo es
+ * @return bool False si el arbol no es del tipo de operacion buscado True si lo
+ * es
  * */
 bool AST::readTree(Node* node,
                    stack<char>* variables,

@@ -25,6 +25,8 @@ class AST {
     Node* simplifySum(Node* node);
     Node* simplifyMult(Node* node);
     Node* simplifyNullable(Node* node);
+    bool equals(Node* node);
+    bool equals(Node* node1, Node* node2);
 
     void print();
 
