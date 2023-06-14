@@ -69,21 +69,16 @@ AST::AST(string filename) {
     stack<Node_Operation*> pila;
 
     if (getline(file, line, '\n')) {
-        cout << line << endl;
         ss << line;
         while (getline(ss, token, ' ')) {
-            cout << token << endl;
             if (isOperator(token)) {
-                cout << "Es un operador" << token << endl;
                 node = new Node_Operation(token[0]);
 
             } else if (isNumber(token)) {
-                cout << "Es un numero: " << token << endl;
                 int valor = stoi(token);
                 node = new Node_Number(valor);
 
             } else if (isVariable(token)) {
-                cout << "Es un identificador: " << token << endl;
                 char name = token[0];
                 node = new Node_Variable(name);
             }
@@ -269,7 +264,15 @@ Node* AST::simplify(Node* node) {
     Node* compared;
     Node_Operation* op = (Node_Operation*)node;
 
-    if (op->operation == '+') {
+    if (equals(op->left, op->right)) {
+        if (op->operation == '+') {
+            simplified = new Node_Operation('*', op->left, new Node_Number(2));
+        } else if (op->operation == '*') {
+            simplified = new Node_Operation('^', op->left, new Node_Number(2));
+        } else if (op->operation == '-') {
+            simplified = new Node_Number(0);
+        }
+    } else if (op->operation == '+') {
         simplified = simplifySum(node);
     } else if (op->operation == '*') {
         simplified = simplifyMult(node);
@@ -281,8 +284,7 @@ Node* AST::simplify(Node* node) {
     do {
         compared = simplified;
         simplified = simplifyNullable(simplified);
-    }
-    while (!equals(simplified, compared));
+    } while (!equals(simplified, compared));
 
     return simplified;
 }
@@ -584,6 +586,7 @@ bool AST::equals(Node* node1, Node* node2) {
  * */
 void AST::print() {
     root->print();
+    cout << endl;
 }
 
 /**
