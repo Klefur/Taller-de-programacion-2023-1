@@ -1,9 +1,11 @@
 #include "Node.h"
 
+/**
+ * @brief Clase que representa un nodo de tipo operacion
+ */
 class Node_Operation : public Node {
    public:
     char operation;
-    Node* parent;
     Node* left;
     Node* right;
 

@@ -1,5 +1,7 @@
-Main: Node.o Node_Operation.o Node_Variable.o Node_Number.o 
-	g++ -o main Node.o Node_Operation.o Node_Variable.o Node_Number.o loadFile.cpp
+Main: Node.o Node_Operation.o Node_Variable.o Node_Number.o AST.o 
+	g++ -o main Node.o Node_Operation.o Node_Variable.o Node_Number.o AST.o loadFile.cpp
+AST.o:
+	g++ -c AST.cpp
 Node.o:
 	g++ -c Node.cpp
 Node_Operation.o:

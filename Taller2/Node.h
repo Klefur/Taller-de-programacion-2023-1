@@ -1,19 +1,24 @@
 #ifndef _NODE
 #define _NODE
 
-class Node {
 #define NUMBER 0
 #define OPERATOR 1
 #define VARIABLE 2
 #define INVALID 3
 
+/**
+ * @brief Clase abstracta que representa un nodo de un arbol
+ * 
+ */
+class Node {
    public:
-    Node* parent;
+    int type;
 
     Node();
     ~Node();
-    int type;
-    int getType();
+    bool isNodeOperator();
+    bool isNodeVariable();
+    bool isNodeNumber();
     virtual void print() = 0;
 };
 
