@@ -4,16 +4,20 @@
 
 using namespace std;
 
-float numeroMasFraccional(vector<float> numeros, int longitud) {
-    float fraccionMaxima = modf(numeros[1], &fraccionMaxima);
-    int indiceMaximo = 1;
+float numeroMasFraccional(vector<float> numeros,
+                          int longitud,
+                          vector<int> indices) {
+    float fraccionMaxima = modf(numeros[indices[0]], &fraccionMaxima);
+    int indiceMaximo = indices[0];
 
-    for (int i = 2; i < longitud; i++) {
-        float fraccionActual = modf(numeros[i], &fraccionActual);
+    if (indices.size() > 1) {
+        for (int i = 1; i < indices.size(); i++) {
+            float fraccionActual = modf(numeros[indices[i]], &fraccionActual);
 
-        if (fraccionActual > fraccionMaxima) {
-            fraccionMaxima = fraccionActual;
-            indiceMaximo = i;
+            if (fraccionActual > fraccionMaxima) {
+                fraccionMaxima = fraccionActual;
+                indiceMaximo = indices[i];
+            }
         }
     }
 
@@ -33,11 +37,14 @@ int main(int argc, char const* argv[]) {
     }
     cout << endl;
 
+    cout << "LB: " << simplex1->lowerBound << endl;
+
     int flag = 1;
 
     while (flag) {
         // retorna [Z,x1,...,xn] sino []
-        int indexFrac = numeroMasFraccional(par1, par1.size());
+        int indexFrac =
+            numeroMasFraccional(par1, par1.size(), simplex1->intVars);
 
         Simplex* simplex2 = simplex1->copy();
         Simplex* simplex3 = simplex1->copy();
@@ -57,6 +64,8 @@ int main(int argc, char const* argv[]) {
                 cout << par2[i] << " ";
             }
             cout << endl;
+            cout << "LB: " << simplex2->lowerBound << endl;
+            cout << "Resta: " << (simplex1->lowerBound - par2[0]) << endl;
         }
 
         cout << "Insertando restricciones x" << indexFrac
@@ -74,6 +83,8 @@ int main(int argc, char const* argv[]) {
                 cout << par3[i] << " ";
             }
             cout << endl;
+            cout << "LB: " << simplex3->lowerBound << endl;
+            cout << "Resta: " << (simplex1->lowerBound - par3[0]) << endl;
         }
 
         if (simplex1->lowerBound > par2[0] && simplex1->lowerBound > par3[0]) {

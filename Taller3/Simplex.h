@@ -46,6 +46,7 @@ class Simplex {
     //***** Matriz del problema: incluye c,a,b inicialmente se
     // transforma a la solucion por piveoteo*****
     std::vector<std::vector<float>> a;
+    std::vector<int> intVars; // Indices de variables enteras
     float lowerBound;  // Valor minimo de la solucion
     int m1;            // numero de restricciones <=
     int m2;            // numero de restricciones >=

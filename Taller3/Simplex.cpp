@@ -45,6 +45,16 @@ Simplex::Simplex(string fileName) {
     getline(charStream, token, ' ');
     this->m3 = stoi(token);
 
+    // leyendo variables restringidas a entero
+    getline(file, line);
+    if (line.compare("\n") != 0) {
+        charStream.clear();
+        charStream << line;
+        while (getline(charStream, token, ' ')) {
+            this->intVars.push_back(stoi(token));
+        }
+    }
+
     // leyendo la matrix que incluye c,a,b: (m+1) x (n+1), donde n es el numero
     // de variables y m=m1+m2+m3 el numero de restricciones
     while (getline(file, line)) {
@@ -108,6 +118,7 @@ Simplex::Simplex(vector<vector<float>> a, int m1, int m2, int m3) {
     this->m = m;
     this->n = a[0].size() - 1;
     this->isSolved = false;
+    this->lowerBound = 0;
 }
 
 Simplex::~Simplex() {}
@@ -133,6 +144,7 @@ vector<float> Simplex::solve() {
                 a[i + 1][0];  // se guarda el valor de la variable
         }
     }
+    parameters[0] = round(parameters[0]*100) / 100;
     solution = parameters;  // se guarda la solucion en el atributo solution
 
     return parameters;
@@ -397,17 +409,23 @@ void Simplex::insertConstraint(float b, int var, int type) {
 
 float Simplex::solveLB() {
     Simplex* lb = this->copy();
-    int vars[solution.size()];
-    for (int i = 0; i < solution.size(); i++) {
+    int vars[intVars.size()];
+    for (int i : this->intVars) {
         vars[i] = int(solution[i]);
         lb->insertConstraint(float(vars[i]), i, 3);
     }
+
     vector<float> lbSolve = lb->solve();
     if (lbSolve.size() == 0) {
         return -1;
     }
-    lowerBound = lbSolve[0];
-    return lbSolve[0];
+
+    cout << endl;
+
+    if (lbSolve[0] > lowerBound) {
+        lowerBound = lbSolve[0];
+    }
+    return lowerBound;
 }
 
 /*
@@ -422,6 +440,7 @@ Simplex* Simplex::copy() {
     s->a = this->a;
     s->solution = this->solution;
     s->lowerBound = this->lowerBound;
+    s->intVars = this->intVars;
     return s;
 }
 
