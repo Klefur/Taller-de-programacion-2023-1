@@ -29,7 +29,6 @@ class Simplex {
     // Si indice >=n entonces la variable es artificial
     // y no se cuenta en la solucion
     std::vector<int> iposv;
-    std::vector<float> solution;
     int simplx();  // Metodo que ejecuta el algoritmo simplex
     void maxValue(int mm,
                   std::vector<int> ll,
@@ -46,11 +45,12 @@ class Simplex {
     //***** Matriz del problema: incluye c,a,b inicialmente se
     // transforma a la solucion por piveoteo*****
     std::vector<std::vector<float>> a;
-    std::vector<int> intVars;  // Indices de variables enteras
+    std::vector<int> intVars;       // Indices de variables enteras
     std::vector<float> lowerBound;  // Valor minimo de la solucion
-    int m1;                    // numero de restricciones <=
-    int m2;                    // numero de restricciones >=
-    int m3;                    // numero de restricciones =
+    std::vector<float> upperBound;
+    int m1;  // numero de restricciones <=
+    int m2;  // numero de restricciones >=
+    int m3;  // numero de restricciones =
 
     // Constructor con archivo de entrada
     Simplex(std::string file_name);
@@ -74,4 +74,8 @@ class Simplex {
     void printProblemMatrix();
     // Imprime la solucion del problema
     void printSolution();
+    // Imprime la cota superior del problema
+    void printUpperBound();
+    // Imprime la cota inferior del problema
+    void printLowerBound();
 };

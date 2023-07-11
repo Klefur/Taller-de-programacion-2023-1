@@ -144,8 +144,7 @@ vector<float> Simplex::solve() {
                 a[i + 1][0];  // se guarda el valor de la variable
         }
     }
-    parameters[0] = round(parameters[0]*100) / 100;
-    solution = parameters;  // se guarda la solucion en el atributo solution
+    upperBound = parameters;  // se guarda la solucion en el atributo upperBound
 
     return parameters;
 }
@@ -402,9 +401,9 @@ void Simplex::insertConstraint(float b, int var, int type) {
             break;
     }
     m++;
-    isSolved = false;  // La solucion ya no es valida
-    a = initialA;      // Se copia la matriz inicial a la matriz de trabajo
-    solution.clear();  // Se limpia la solucion
+    isSolved = false;    // La solucion ya no es valida
+    a = initialA;        // Se copia la matriz inicial a la matriz de trabajo
+    upperBound.clear();  // Se limpia la solucion
 }
 
 /*
@@ -416,7 +415,7 @@ vector<float> Simplex::solveLB() {
     Simplex* lb = this->copy();
     int vars[intVars.size()];
     for (int i : this->intVars) {
-        vars[i] = int(solution[i]);
+        vars[i] = int(upperBound[i]);
         lb->insertConstraint(float(vars[i]), i, 3);
     }
 
@@ -441,7 +440,7 @@ Simplex* Simplex::copy() {
     s->isSolved = this->isSolved;
     s->icase = this->icase;
     s->a = this->a;
-    s->solution = this->solution;
+    s->upperBound = this->upperBound;
     s->lowerBound = this->lowerBound;
     s->intVars = this->intVars;
     return s;
@@ -449,7 +448,7 @@ Simplex* Simplex::copy() {
 
 vector<float> Simplex::getSolution() {
     if (isSolved && icase == 0) {
-        return solution;
+        return upperBound;
     }
     vector<float> empty;
     return empty;
@@ -526,5 +525,27 @@ void Simplex::printSolution() {
         }
     } else {
         cout << "No esta resuelto." << endl;
+    }
+}
+
+void Simplex::printUpperBound() {
+    if (upperBound.size() > 0) {
+        cout << "upperBound: ";
+        for (float i : this->upperBound) {
+            cout << i << " ";
+        }
+        cout << endl;
+    } else {
+        cout << "No hay solucion" << endl;
+    }
+}
+
+void Simplex::printLowerBound() {
+    if (lowerBound.size() > 0) {
+        cout << "lowerBound: ";
+        for (float i : this->lowerBound) {
+            cout << i << " ";
+        }
+        cout << endl << endl;
     }
 }
