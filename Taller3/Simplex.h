@@ -46,11 +46,11 @@ class Simplex {
     //***** Matriz del problema: incluye c,a,b inicialmente se
     // transforma a la solucion por piveoteo*****
     std::vector<std::vector<float>> a;
-    std::vector<int> intVars; // Indices de variables enteras
-    float lowerBound;  // Valor minimo de la solucion
-    int m1;            // numero de restricciones <=
-    int m2;            // numero de restricciones >=
-    int m3;            // numero de restricciones =
+    std::vector<int> intVars;  // Indices de variables enteras
+    std::vector<float> lowerBound;  // Valor minimo de la solucion
+    int m1;                    // numero de restricciones <=
+    int m2;                    // numero de restricciones >=
+    int m3;                    // numero de restricciones =
 
     // Constructor con archivo de entrada
     Simplex(std::string file_name);
@@ -63,7 +63,7 @@ class Simplex {
     // var>=b (tipo 2), var=b (tipo 3)
     void insertConstraint(float b, int var, int type);
     // Retorna el valor minimo de la solucion simplex
-    float solveLB();
+    std::vector<float> solveLB();
     // Retorna una copia del objeto
     Simplex* copy();
     // Retorna la solucion del problema de tamaño n+1

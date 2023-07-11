@@ -94,6 +94,7 @@ Simplex::Simplex(string fileName) {
     this->a.push_back(row);
     this->initialA = a;
     this->isSolved = false;  // inicialmente aún no se ha resuelto
+    this->lowerBound.push_back(0);
     file.close();
 }
 
@@ -118,7 +119,6 @@ Simplex::Simplex(vector<vector<float>> a, int m1, int m2, int m3) {
     this->m = m;
     this->n = a[0].size() - 1;
     this->isSolved = false;
-    this->lowerBound = 0;
 }
 
 Simplex::~Simplex() {}
@@ -407,7 +407,12 @@ void Simplex::insertConstraint(float b, int var, int type) {
     solution.clear();  // Se limpia la solucion
 }
 
-float Simplex::solveLB() {
+/*
+    Calcula el lower bound de la solucion
+    asignando las variables enteras, truncandolas y colocandolas
+    como restriccion de tipe 3
+*/
+vector<float> Simplex::solveLB() {
     Simplex* lb = this->copy();
     int vars[intVars.size()];
     for (int i : this->intVars) {
@@ -417,13 +422,11 @@ float Simplex::solveLB() {
 
     vector<float> lbSolve = lb->solve();
     if (lbSolve.size() == 0) {
-        return -1;
+        return lbSolve;
     }
 
-    cout << endl;
-
-    if (lbSolve[0] > lowerBound) {
-        lowerBound = lbSolve[0];
+    if (lbSolve[0] > lowerBound[0]) {
+        lowerBound = lbSolve;
     }
     return lowerBound;
 }
