@@ -30,14 +30,14 @@ int Heap::parent_idx(int i) {
     return (i - 1) / 2;
 }
 
-Node* Heap::pop() {
+Node* Heap::pop(int i) {
     if (size == 0) {
         return nullptr;
     }
-    Node* s = data[0];
-    data[0] = data[size - 1];
+    Node* s = data[i];
+    data[i] = data[size - 1];
     size--;
-    heapify(0);
+    heapify(i);
     return s;
 }
 

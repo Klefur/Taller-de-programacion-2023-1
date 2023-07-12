@@ -12,7 +12,7 @@ class Heap {
     int left_idx(int i);
     int right_idx(int i);
     int parent_idx(int i);
-    Node* pop();
+    Node* pop(int i);
     void push(Node* s);
     void heapify(int i);
     int isInHeap(Node* s);

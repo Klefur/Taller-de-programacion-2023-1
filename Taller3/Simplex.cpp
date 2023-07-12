@@ -94,7 +94,6 @@ Simplex::Simplex(string fileName) {
     this->a.push_back(row);
     this->initialA = a;
     this->isSolved = false;  // inicialmente aún no se ha resuelto
-    this->lowerBound.push_back(0);
     file.close();
 }
 
@@ -136,12 +135,12 @@ vector<float> Simplex::solve() {
 
     vector<float> parameters(n + 1,
                              0.0);  // vector de tamaño n+1 inicializado en 0
-    parameters[0] = a[0][0];        // valor de Z resultante
+    parameters[0] = abs(a[0][0]);   // valor de Z resultante
     for (int i = 0; i < m; i++) {
         if (iposv[i] < n) {  // si el indice correspnde a una variable (y no a
                              // una slack variable)
             parameters[iposv[i] + 1] =
-                a[i + 1][0];  // se guarda el valor de la variable
+                abs(a[i + 1][0]);  // se guarda el valor de la variable
         }
     }
     upperBound = parameters;  // se guarda la solucion en el atributo upperBound
@@ -414,20 +413,15 @@ void Simplex::insertConstraint(float b, int var, int type) {
 vector<float> Simplex::solveLB() {
     Simplex* lb = this->copy();
     int vars[intVars.size()];
-    for (int i : this->intVars) {
-        vars[i] = int(upperBound[i]);
-        lb->insertConstraint(float(vars[i]), i, 3);
+
+    for (int i = 0; i < intVars.size(); i++) {
+        vars[i] = int(upperBound[intVars[i]]);
+        lb->insertConstraint(float(vars[i]), intVars[i], 3);
     }
 
     vector<float> lbSolve = lb->solve();
-    if (lbSolve.size() == 0) {
-        return lbSolve;
-    }
 
-    if (lbSolve[0] > lowerBound[0]) {
-        lowerBound = lbSolve;
-    }
-    return lowerBound;
+    return lbSolve;
 }
 
 /*
@@ -441,7 +435,6 @@ Simplex* Simplex::copy() {
     s->icase = this->icase;
     s->a = this->a;
     s->upperBound = this->upperBound;
-    s->lowerBound = this->lowerBound;
     s->intVars = this->intVars;
     return s;
 }
@@ -537,15 +530,5 @@ void Simplex::printUpperBound() {
         cout << endl;
     } else {
         cout << "No hay solucion" << endl;
-    }
-}
-
-void Simplex::printLowerBound() {
-    if (lowerBound.size() > 0) {
-        cout << "lowerBound: ";
-        for (float i : this->lowerBound) {
-            cout << i << " ";
-        }
-        cout << endl << endl;
     }
 }

@@ -8,9 +8,14 @@ class BB {
     Heap* noVisited;
     Heap* visited;
 
+    std::vector<float> lowerBound;
+
     BB();
     ~BB();
     void solve(std::string namefile);
     int moreFracctional(std::vector<float> numeros, std::vector<int> indices);
     int isSolution(Node* node);
+    void updateLowerBound(std::vector<float> lowerBound);
+    void bound();
+    void printLowerBound();
 };

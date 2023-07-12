@@ -46,8 +46,7 @@ class Simplex {
     // transforma a la solucion por piveoteo*****
     std::vector<std::vector<float>> a;
     std::vector<int> intVars;       // Indices de variables enteras
-    std::vector<float> lowerBound;  // Valor minimo de la solucion
-    std::vector<float> upperBound;
+    std::vector<float> upperBound; // Solucion del problema
     int m1;  // numero de restricciones <=
     int m2;  // numero de restricciones >=
     int m3;  // numero de restricciones =
@@ -76,6 +75,4 @@ class Simplex {
     void printSolution();
     // Imprime la cota superior del problema
     void printUpperBound();
-    // Imprime la cota inferior del problema
-    void printLowerBound();
 };

@@ -10,27 +10,8 @@ BB::BB() {
 
 BB::~BB() {}
 
-int BB::isSolution(Node* node) {
-    vector<float> upperBound = node->s->upperBound;
-    vector<int> intVars = node->s->intVars;
-
-    if (upperBound.size() == 0) {
-        return 0;
-    }
-
-    for (int i : intVars) {
-        if (upperBound[i] != int(upperBound[i])) {
-            return 0;
-        } else {
-            node->s->upperBound[i] = abs(upperBound[i]);
-        }
-    }
-
-    return 1;
-}
-
 void BB::solve(string namefile) {
-    Simplex* s = new Simplex("sistema.txt");
+    Simplex* s = new Simplex(namefile);
 
     s->solve();
 
@@ -41,13 +22,13 @@ void BB::solve(string namefile) {
         return;
     }
 
-    s->solveLB();
-    s->printLowerBound();
+    lowerBound = s->solveLB();
+    printLowerBound();
 
     this->noVisited->push(new Node(s));
 
     while (this->noVisited->size > 0) {
-        Node* node = this->noVisited->pop();
+        Node* node = this->noVisited->pop(0);
         this->visited->push(node);
 
         s = node->s;
@@ -56,27 +37,27 @@ void BB::solve(string namefile) {
         Simplex* sIzq = s->copy();
         Simplex* sDer = s->copy();
 
-        cout << "Insertando restricciones x" << indexFrac
+        cout << "Izq: insertando restricciones x" << indexFrac
              << " <= " << int(s->upperBound[indexFrac] + 1) << endl;
         sIzq->insertConstraint(int(s->upperBound[indexFrac]), indexFrac, 1);
         sIzq->printProblemMatrix();
         sIzq->solve();
         sIzq->printUpperBound();
-        sIzq->solveLB();
-        sIzq->printLowerBound();
+        updateLowerBound(sIzq->solveLB());
+        printLowerBound();
 
-        cout << "Insertando restricciones x" << indexFrac
+        cout << "Der: insertando restricciones x" << indexFrac
              << " >= " << int(s->upperBound[indexFrac] + 1) << endl;
         sDer->insertConstraint(int(s->upperBound[indexFrac] + 1), indexFrac, 2);
         sDer->printProblemMatrix();
         sDer->solve();
         sDer->printUpperBound();
-        sDer->solveLB();
-        sDer->printLowerBound();
+        updateLowerBound(sDer->solveLB());
+        printLowerBound();
 
-        if (s->lowerBound[0] > sIzq->upperBound[0] &&
-            s->lowerBound[0] > sDer->upperBound[0]) {
-            Node* nSol = new Node(s->lowerBound);
+        if (lowerBound[0] >= sIzq->upperBound[0] &&
+            lowerBound[0] >= sDer->upperBound[0]) {
+            Node* nSol = new Node(lowerBound);
 
             cout << "Insertando solucion" << endl;
             if (!solutions->isInHeap(nSol))
@@ -98,7 +79,7 @@ void BB::solve(string namefile) {
             }
         }
 
-        if (sIzq->upperBound[0] > s->lowerBound[0]) {
+        if (sIzq->upperBound[0] > lowerBound[0]) {
             Node* nIzq = new Node(sIzq);
 
             cout << "Insertando Nodo Izq " << endl;
@@ -108,25 +89,44 @@ void BB::solve(string namefile) {
             this->visited->push(new Node(sIzq));
         }
 
-        if (sDer->upperBound[0] > s->lowerBound[0]) {
+        if (sDer->upperBound[0] > lowerBound[0]) {
             Node* nDer = new Node(sDer);
 
-            cout << "Insertando Nodo Der " << endl << endl;
+            cout << "Insertando Nodo Der " << endl;
             if (!visited->isInHeap(nDer))
                 noVisited->push(nDer);
         } else {
             this->visited->push(new Node(sDer));
         }
+
+        cout << endl;
     }
 
     cout << "Solucion Final:" << endl;
 
-    Node* node = solutions->pop();
+    Node* node = solutions->pop(0);
 
     for (float i : node->upperBound) {
         cout << i << " ";
     }
     cout << endl;
+}
+
+int BB::isSolution(Node* node) {
+    vector<float> upperBound = node->s->upperBound;
+    vector<int> intVars = node->s->intVars;
+
+    if (upperBound.size() == 0) {
+        return 0;
+    }
+
+    for (int i : intVars) {
+        if (upperBound[i] != int(upperBound[i])) {
+            return 0;
+        }
+    }
+
+    return 1;
 }
 
 int BB::moreFracctional(vector<float> numeros, vector<int> indices) {
@@ -148,4 +148,45 @@ int BB::moreFracctional(vector<float> numeros, vector<int> indices) {
         }
     }
     return indiceMaximo;
+}
+
+void BB::updateLowerBound(vector<float> lowerBound) {
+    if (lowerBound.size() == 0) {
+        return;
+    } else if (lowerBound[0] > this->lowerBound[0]) {
+        this->lowerBound = lowerBound;
+        bound();
+    }
+}
+
+void BB::bound() {
+    int i;
+
+    i = 0;
+    while (i < solutions->size) {
+        if (solutions->data[i]->upperBound[0] < lowerBound[0]) {
+            solutions->pop(i);
+            i = 0;
+        }
+        i++;
+    }
+
+    i = 0;
+    while (i < noVisited->size) {
+        if (noVisited->data[i]->s->upperBound[0] < lowerBound[0]) {
+            visited->push(noVisited->pop(i));
+            i = 0;
+        }
+        i++;
+    }
+}
+
+void BB::printLowerBound() {
+    if (lowerBound.size() > 0) {
+        cout << "lowerBound: ";
+        for (float i : this->lowerBound) {
+            cout << i << " ";
+        }
+        cout << endl << endl;
+    }
 }

@@ -22,7 +22,7 @@ int main() {
     }
     cout << "Now we extract all the elements from the heap: " << endl;
     for (int i = 0; i < 42; i++) {
-        Node* s = h.pop();
+        Node* s = h.pop(0);
         if (s != nullptr) {
             cout << s->upperBound[0] << endl;
         } else {
