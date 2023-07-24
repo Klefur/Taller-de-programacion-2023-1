@@ -17,7 +17,7 @@ int main() {
         s->solve();
         s->upperBound[0] += i;
         Node* n = new Node(s);
-        cout << "inserting:" << n->upperBound[0] << endl;
+        cout << "inserting:" << n->s->upperBound[0] << endl;
         h.push(n);
     }
     cout << "Now we extract all the elements from the heap: " << endl;

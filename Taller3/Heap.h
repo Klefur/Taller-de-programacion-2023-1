@@ -1,6 +1,9 @@
 #include <iostream>
 #include "Node.h"
 
+/**
+ * @brief Clase que representa la estructura de un max heap
+ */
 class Heap {
    public:
     Node** data;

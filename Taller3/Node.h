@@ -1,5 +1,8 @@
 #include "Simplex.h"
 
+/**
+ * @brief Clase que representa un nodo del arbol de max heap
+ */
 class Node {
    public:
     Simplex *s;

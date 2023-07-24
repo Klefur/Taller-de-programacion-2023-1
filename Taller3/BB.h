@@ -2,6 +2,10 @@
 
 #define LOGIC_ONE 0.999999
 
+/**
+ * @brief Clase que representa la estructura del branch and bound
+ * conformado de 3 max heap
+ */
 class BB {
    public:
     Heap* solutions;
@@ -9,6 +13,9 @@ class BB {
     Heap* visited;
 
     std::vector<float> lowerBound;
+    std::vector<float> finalSolution;
+    
+    int cantidadNodos;
 
     BB();
     ~BB();
@@ -18,4 +25,5 @@ class BB {
     void updateLowerBound(std::vector<float> lowerBound);
     void bound();
     void printLowerBound();
+    void printFinalSolution();
 };

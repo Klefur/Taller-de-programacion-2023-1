@@ -135,14 +135,22 @@ vector<float> Simplex::solve() {
 
     vector<float> parameters(n + 1,
                              0.0);  // vector de tamaño n+1 inicializado en 0
-    parameters[0] = abs(a[0][0]);   // valor de Z resultante
+    parameters[0] = a[0][0];        // valor de Z resultante
     for (int i = 0; i < m; i++) {
         if (iposv[i] < n) {  // si el indice correspnde a una variable (y no a
                              // una slack variable)
             parameters[iposv[i] + 1] =
-                abs(a[i + 1][0]);  // se guarda el valor de la variable
+                a[i + 1][0];  // se guarda el valor de la variable
         }
     }
+
+    // se convierte el -0 a 0 por estetica
+    for (int i = 0; i < parameters.size(); i++) {
+        if (parameters[i] == -0.0) {
+            parameters[i] = 0.0;
+        }
+    }
+
     upperBound = parameters;  // se guarda la solucion en el atributo upperBound
 
     return parameters;
@@ -416,9 +424,9 @@ vector<float> Simplex::solveLB() {
 
     for (int i = 0; i < intVars.size(); i++) {
         vars[i] = int(upperBound[intVars[i]]);
-        lb->insertConstraint(float(vars[i]), intVars[i], 3);
+        lb->insertConstraint(float(vars[i]), intVars[i], 2);
+        lb->insertConstraint(float(vars[i]), intVars[i], 1);
     }
-
     vector<float> lbSolve = lb->solve();
 
     return lbSolve;
@@ -453,10 +461,11 @@ vector<float> Simplex::getSolution() {
 void Simplex::printProblemMatrix() {
     for (size_t i = 0; i < initialA.size(); i++) {
         for (size_t j = 0; j < initialA[0].size(); j++) {
-            string aij = to_string(initialA[i][j]);
-            aij = aij.substr(0, aij.find(".") + 3);
-            aij.insert(aij.begin(), 10 - aij.length(), ' ');
-            cout << aij;
+            //! string aij = to_string(initialA[i][j]);
+            //! aij = aij.substr(0, aij.find(".") + 3);
+            //! aij.insert(aij.begin(), 10 - aij.length(), ' ');
+            //! cout << aij;
+            cout << initialA[i][j] << " ";
         }
         cout << endl;
     }
